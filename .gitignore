@@ -8,3 +8,7 @@ models/*.pkl
 models/*.joblib
 .DS_Store
 data/processed/
+
+venv_mlflow_ui/
+
+mlruns/
