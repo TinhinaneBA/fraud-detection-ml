@@ -1,151 +1,124 @@
-#  Fraud Detection ML — End-to-End Pipeline
+# Fraud Detection ML — End-to-End Pipeline
 
-> Système de détection de fraude financière basé sur le machine learning.  
-> Pipeline complet : EDA → Preprocessing → Modélisation → Interprétabilité → Déploiement.
+> Systeme de detection de fraude financiere base sur le machine learning.
+> Pipeline complet : EDA → Preprocessing → Modelisation → Interpretabilite → Deploiement.
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.x-orange)
-![XGBoost](https://img.shields.io/badge/XGBoost-latest-green)
-![Streamlit](https://img.shields.io/badge/Streamlit-deployed-red)
-![MLflow](https://img.shields.io/badge/MLflow-tracking-blue)
-![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
-
----
-
-##  Objectif
-
-Détecter automatiquement les transactions bancaires frauduleuses à partir de
-284 807 transactions réelles anonymisées, en gérant le défi du **déséquilibre
-extrême des classes** (0.17% de fraudes).
+![Python](https://img.shields.io/badge/Python-3.14-blue)
+![XGBoost](https://img.shields.io/badge/XGBoost-Production-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-red)
+![MLflow](https://img.shields.io/badge/MLflow-Tracked-blue)
+![SHAP](https://img.shields.io/badge/SHAP-Interpretability-orange)
+![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
 
 ---
 
-##  Structure du projet
+## Objectif
+
+Detecter automatiquement les transactions bancaires frauduleuses a partir de
+284 807 transactions reelles anonymisees, en gerant le defi du desequilibre
+extreme des classes (0.17% de fraudes).
+
+---
+
+## Resultats cles
+
+| Metrique | Valeur | Signification |
+|---|---|---|
+| AUC-ROC | 0.9802 | Excellente separation fraude/legitime |
+| PR-AUC | 0.8644 | Performance adaptee aux classes desequilibrees |
+| F1-Score | 0.8649 | Meilleur equilibre precision/rappel |
+| Precision | 91.95% | Fiabilite des alertes declenchees |
+| Faux Positifs | 7 | Clients legitimes bloques (vs 52 avec seuil defaut) |
+
+---
+
+## Pipeline ML
+
+```
+EDA → Preprocessing (RobustScaler + SMOTE)
+    → Modelisation (4 modeles compares)
+    → Evaluation (Threshold Tuning + SHAP)
+    → Tracking (MLflow — 4 runs enregistres)
+    → Deploiement (Streamlit)
+```
+
+---
+
+## Structure du projet
 
 ```
 fraud-detection-ml/
 ├── data/
-│   ├── raw/                    ← Dataset Kaggle (non versionné)
-│   └── processed/              ← Données après preprocessing
+│   ├── raw/                    <- Dataset Kaggle (non versionne)
+│   └── processed/              <- Donnees apres preprocessing (non versionne)
 ├── notebooks/
-│   ├── 01_eda.ipynb            ← Analyse exploratoire complète
-│   ├── 02_preprocessing.ipynb  ← Nettoyage, SMOTE, Pipeline
-│   ├── 03_modeling.ipynb       ← Entraînement et comparaison de modèles
-│   ├── 04_evaluation.ipynb     ← Métriques, courbes, SHAP
-│   └── 05_mlflow.ipynb         ← Tracking des expériences
+│   ├── 01_eda.ipynb            <- Analyse exploratoire complete
+│   ├── 02_preprocessing.ipynb  <- Nettoyage, SMOTE, Pipeline
+│   ├── 03_modeling.ipynb       <- Entrainement et comparaison de modeles
+│   ├── 04_evaluation.ipynb     <- Metriques, threshold tuning, SHAP
+│   └── 05_mlflow.ipynb         <- Tracking des experiences
 ├── src/
-│   ├── data/
-│   │   ├── make_dataset.py     ← Chargement et validation
-│   │   └── preprocessing.py   ← Pipeline de transformation
-│   ├── models/
-│   │   ├── train.py            ← Entraînement
-│   │   ├── predict.py          ← Inférence
-│   │   └── evaluate.py        ← Métriques
-│   └── visualization/
-│       └── plots.py            ← Fonctions de visualisation
+│   └── data/
+│       └── preprocessing.py    <- Fonctions reutilisables
 ├── app/
-│   └── streamlit_app.py        ← Application interactive
-├── models/                     ← Modèles sauvegardés
+│   └── streamlit_app.py        <- Application interactive
+├── models/
+│   └── model_metadata.json     <- Metriques et parametres du modele
 ├── reports/
-│   ├── figures/                ← Graphiques exportés
-│   └── rapport_final.md        ← Synthèse métier
+│   └── figures/                <- 17 graphiques exportes
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-##  Dataset
+## Dataset
 
 - **Source :** [Credit Card Fraud Detection — Kaggle](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
-- **Volume :** 284 807 transactions · Septembre 2013 · Europe
-- **Features :** 28 composantes PCA anonymisées (V1–V28) + Time + Amount
-- **Déséquilibre :** 492 fraudes (0.17%) / 284 315 légitimes (99.83%)
+- **Volume :** 284 807 transactions — Septembre 2013 — Europe
+- **Features :** 28 composantes PCA anonymisees (V1-V28) + Time + Amount
+- **Desequilibre :** 492 fraudes (0.17%) / 284 315 legitimes (99.83%)
 
->  Le dataset n'est pas versionné (trop lourd).  
-> Télécharger `creditcard.csv` depuis Kaggle et le placer dans `data/raw/`.
-
----
-
-##  Pipeline ML
-
-```
-EDA → Feature Engineering → SMOTE → Train/Test Split
-    → Logistic Regression (baseline)
-    → Random Forest
-    → XGBoost          ← modèle principal
-    → LightGBM
-    → Optimisation du seuil de décision
-    → SHAP (interprétabilité globale + locale)
-    → Déploiement Streamlit
-```
+Le dataset n'est pas versionne (trop lourd).
+Telecharger `creditcard.csv` depuis Kaggle et le placer dans `data/raw/`.
 
 ---
 
-##  Métriques utilisées
+## Decisions techniques documentees
 
-| Métrique | Pourquoi |
-|---|---|
-| **AUC-ROC** | Performance globale du modèle |
-| **Precision-Recall AUC** | Adaptée aux classes déséquilibrées |
-| **F1-Score** | Équilibre précision / rappel |
-| **Recall (fraudes)** | Minimiser les faux négatifs |
-| **Matrice de confusion** | Vision complète des erreurs |
+### Choix du modele : XGBoost vs Random Forest
 
-> En détection de fraude, un **faux négatif** (fraude non détectée) coûte
-> plus cher qu'un **faux positif** (transaction légitime bloquée).
-> Le Recall sur la classe fraude est donc la métrique prioritaire.
+| Critere | Random Forest | XGBoost |
+|---|---|---|
+| PR-AUC | 0.8680 | 0.8644 |
+| Temps d'entrainement | 37 087s (~10h) | 40s |
+| Deployable en production | Non | Oui |
+
+**Decision : XGBoost retenu.**
+Difference PR-AUC negligeable (+0.36%) vs cout computationnel 927x superieur.
+
+### Optimisation du seuil de decision
+
+| Seuil | Fraudes detectees | Faux Positifs | F1 |
+|---|---|---|---|
+| 0.50 (defaut) | 84 | 52 | 0.7179 |
+| **0.94 (optimal)** | **80** | **7** | **0.8649** |
+
+**Decision : seuil 0.94.**
+Reduction des faux positifs de 85% (52→7) pour seulement 4 fraudes manquees supplementaires.
 
 ---
 
-## 🛠️ Stack technique
+## Stack technique
 
-| Catégorie | Outils |
+| Categorie | Outils |
 |---|---|
 | Manipulation | Pandas, NumPy |
 | Visualisation | Matplotlib, Seaborn, Plotly |
 | ML | Scikit-learn, XGBoost, LightGBM |
-| Déséquilibre | Imbalanced-learn (SMOTE) |
-| Interprétabilité | SHAP |
-| Tracking | MLflow |
-| Déploiement | Streamlit |
+| Desequilibre | Imbalanced-learn (SMOTE) |
+| Interpretabilite | SHAP |
+| Tracking | MLflow 2.17.2 |
+| Deploiement | Streamlit |
 
 ---
-
-##  Lancer le projet
-
-```bash
-# Cloner le repo
-git clone https://github.com/TinhinaneBA/fraud-detection-ml.git
-cd fraud-detection-ml
-
-# Créer l'environnement virtuel
-python -m venv venv
-venv\Scripts\Activate.ps1       # Windows
-# source venv/bin/activate       # Linux/Mac
-
-# Installer les dépendances
-pip install -r requirements.txt
-
-# Télécharger le dataset
-# → https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
-# → Placer creditcard.csv dans data/raw/
-
-# Lancer Jupyter
-jupyter notebook
-
-# Lancer l'application Streamlit (après modélisation)
-streamlit run app/streamlit_app.py
-```
-
----
-
-## 👩 Auteure
-
-**Tinhinane B.** — Étudiante M2 IWOCS · Université Le Havre Normandie  
-Orientée Data Science & Machine Learning  
-[GitHub](https://github.com/TinhinaneBA)
-
----
-
-*Projet réalisé dans le cadre d'un portfolio Data Science professionnel — 2025*
