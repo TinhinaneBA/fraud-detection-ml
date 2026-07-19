@@ -12,6 +12,14 @@
 
 ---
 
+## 🚀 Application en ligne
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fraud-detection-ml-gwdnjvzfqok3rcwtcmx44f.streamlit.app/)
+
+**Tester l'app :** https://fraud-detection-ml-gwdnjvzfqok3rcwtcmx44f.streamlit.app/
+
+---
+
 ## Objectif
 
 Detecter automatiquement les transactions bancaires frauduleuses a partir de
